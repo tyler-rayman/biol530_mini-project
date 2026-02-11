@@ -1,0 +1,42 @@
+---
+title: "README"
+output: html_document
+---
+
+## Project overview
+
+This repository is an example project for a reproducible research workflow.  
+
+## Repository structure
+
+- `R/` — scripts used to create and/or process project files
+  - `01_load_data.R` loads `PlantGrowth`, inspects it, and writes a raw CSV copy
+- `data/` — data files used by the project
+  - `plant_growth.csv` is a raw copy of the built-in `PlantGrowth` dataset
+
+## Data
+
+**Source:** R built-in dataset `PlantGrowth` (loaded with `data("PlantGrowth")`).
+
+**Variables:**
+- `weight` (numeric): plant weight at the end of the experiment
+- `group` (factor): treatment group with levels `ctrl`, `trt1`, `trt2`  
+  *Note: the dataset documentation does not specify what the treatments are.*
+
+## How to reproduce the data step
+
+Run the following script from the project root:
+
+- `R/01_load_data.R`
+
+This script:
+1. Loads `PlantGrowth`
+2. Inspects the structure (`str()`) and first observations (`head()`)
+3. Writes `data/plant_growth.csv`
+
+## Session info (optional)
+
+If needed, record session/package versions used:
+
+```{r}
+sessionInfo()
