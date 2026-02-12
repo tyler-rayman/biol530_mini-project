@@ -4,14 +4,15 @@ author: "Tyler Rayman"
 date: "`r Sys.Date()`"
 output: html_document
 bibliography: references.bib
+csl: apa.csl
 ---
 
 # Abstract
 
 # Introduction
 
-Body size is an important biological trait that influences ecology, energetics, and survival.  
-In penguins, body mass may vary across geographic locations due to environmental differences or species composition.  
+Body size is an important biological trait that ... 
+In penguins, body mass ...  
 
 This study explores whether penguin body mass differs across islands using the Palmer Penguins dataset (Horst et al., 2020).
 
