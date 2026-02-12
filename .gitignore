@@ -18,7 +18,6 @@
 # Output files from R CMD build
 /*.tar.gz
 # don't store data; we'll use proper data repo
-/data
 /renv
 # Output files from R CMD check
 /*.Rcheck/
