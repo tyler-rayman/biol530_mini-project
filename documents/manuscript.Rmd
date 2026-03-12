@@ -1,8 +1,10 @@
 ---
-title: "Body Mass Variation Across Different Islands in Palmer Penguins"
+title: "Variation in Penguin Body Mass Across Islands in the Palmer Archipelago"
 author: "Tyler Rayman"
 date: "`r Sys.Date()`"
-output: html_document
+output:
+  bookdown::html_document2:
+    number_sections: false
 bibliography: references.bib
 csl: apa.csl
 ---
@@ -34,7 +36,43 @@ All analyses were performed in R.
 
 # Results
 
-(Resultsinserted here after analysis.)
+Mean body mass varied across islands (Figure 1).
+```{r load-data, echo=FALSE}
+penguins <- read.csv("../data/data_processed/penguins_body_mass_by_island.csv")
+```
+
+```{r summary-stats, echo=FALSE}
+summary_stats <- data.frame(
+  island = names(tapply(penguins$body_mass_g, penguins$island, mean)),
+  mean = tapply(penguins$body_mass_g, penguins$island, mean),
+  sd = tapply(penguins$body_mass_g, penguins$island, sd),
+  n = tapply(penguins$body_mass_g, penguins$island, length)
+)
+
+knitr::kable(summary_stats, digits = 2)
+```
+
+```{r body-mass-figure, echo=FALSE, fig.cap="Distribution of penguin body mass across the three islands.", fig.path="../outputs/"}
+boxplot(body_mass_g ~ island,
+        data = penguins,
+        xlab = "Island",
+        ylab = "Body Mass (g)",
+        col = "lightblue")
+```
+A one-way analysis of variance (ANOVA) revealed a significant effect of island on body mass (F(2, 339) = 110, p < 0.001). Post-hoc comparisons using Tukey’s Honestly Significant Difference (HSD) test indicated that penguins from Biscoe Island had significantly greater body mass than those from Dream and Torgersen islands (p < 0.001 for both comparisons), while body mass did not differ significantly between Dream and Torgersen islands (p = 0.998).
+```{r anova-test, echo=FALSE}
+anova_model <- aov(body_mass_g ~ island, data = penguins)
+anova_result <- summary(anova_model)
+
+knitr::kable(anova_result[[1]], digits = 2)
+```
+
+```{r tukey-test, echo=FALSE, include=FALSE}
+tukey_result <- TukeyHSD(anova_model)
+```
+
+Mean penguin body mass varied across islands (Figure 1). A one-way analysis of variance (ANOVA) revealed a significant effect of island on body mass (F(2, 339) = 110, p < 0.001). Post-hoc comparisons using Tukey’s Honestly Significant Difference (HSD) test indicated that penguins from Biscoe Island had significantly greater body mass than those from Dream and Torgersen islands (p < 0.001 for both comparisons), while body mass did not differ significantly between Dream and Torgersen islands (p = 0.998).
+
 
 # Discussion
 
