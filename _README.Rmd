@@ -40,3 +40,4 @@ If needed, record session/package versions used:
 
 ```{r}
 sessionInfo()
+'''
