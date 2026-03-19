@@ -43,5 +43,6 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 .DS_Store
-
+# renv library
+renv/library/
 
