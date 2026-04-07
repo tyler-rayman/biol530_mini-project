@@ -5,39 +5,80 @@ output: html_document
 
 ## Project overview
 
-This repository is an example project for a reproducible research workflow.  
+This repository contains a reproducible research project examining whether penguin body mass differs across islands in the Palmer Archipelago, Antarctica. The project demonstrates a complete reproducible workflow, including data processing, statistical analysis, and manuscript generation using R and R Markdown.
 
 ## Repository structure
 
-- `R/` — scripts used to create and/or process project files
-  - `01_load_data.R` loads `PlantGrowth`, inspects it, and writes a raw CSV copy
-- `data/` — data files used by the project
-  - `plant_growth.csv` is a raw copy of the built-in `PlantGrowth` dataset
+- `_README.Rmd` — project overview and instructions (this file)  
+- `documents/` — manuscript and supporting documents  
+  - `manuscript.Rmd` — reproducible manuscript containing analysis and results  
+  - `manuscript.pdf` — rendered manuscript  
+  - `references.bib` — bibliography file  
+  - `apa.csl` — citation style file  
+  - `data-management-plan.pdf` — data management plan  
+  - `osf-preregistration.pdf` — preregistration document  
+
+- `data/` — data used in the project  
+  - `data_raw/`  
+    - `penguins_raw.csv` — raw dataset  
+  - `data_processed/`  
+    - `penguins_body_mass_by_island.csv` — cleaned dataset used for analysis  
+  - `data_dictionary.md` — variable descriptions  
+
+- `scripts/` — data processing scripts  
+  - `01_load_raw_penguins.R` — loads and saves raw dataset  
+  - `02_clean_penguins.R` — cleans and prepares data for analysis  
+
+- `outputs/` — generated outputs  
+  - `body-mass-figure-1.pdf` — figure of body mass by island  
+  - `penguin_summary_statistics.csv` — summary statistics table  
+
+- `renv.lock` — records package versions for reproducibility  
+- `renv/` — project-specific package environment  
 
 ## Data
 
-**Source:** R built-in dataset `PlantGrowth` (loaded with `data("PlantGrowth")`).
+**Source:** Palmer Penguins dataset (available via the `palmerpenguins` R package; Horst et al., 2020).
 
-**Variables:**
-- `weight` (numeric): plant weight at the end of the experiment
-- `group` (factor): treatment group with levels `ctrl`, `trt1`, `trt2`  
-  *Note: the dataset documentation does not specify what the treatments are.*
+**Variables used in this study:**
 
-## How to reproduce the data step
+- `body_mass_g` (numeric): body mass of individual penguins in grams  
+- `island` (categorical): island where each penguin was observed (Biscoe, Dream, Torgersen)
 
-Run the following script from the project root:
+Only observations with complete data for these variables were included in the analysis.
 
-- `R/01_load_data.R`
+## How to reproduce the data processing
 
-This script:
-1. Loads `PlantGrowth`
-2. Inspects the structure (`str()`) and first observations (`head()`)
-3. Writes `data/plant_growth.csv`
+Run the following scripts from the project root:
 
-## Session info (optional)
+1. `scripts/01_load_raw_penguins.R`  
+   - Loads the dataset and saves a raw copy  
 
-If needed, record session/package versions used:
+2. `scripts/02_clean_penguins.R`  
+   - Filters relevant variables (`body_mass_g`, `island`)  
+   - Removes missing values  
+   - Outputs cleaned dataset to `data/data_processed/`  
+
+## How to reproduce the analysis
+
+Open and knit:
+
+- `documents/manuscript.Rmd`
+
+This will:
+
+1. Load the processed dataset  
+2. Generate summary statistics  
+3. Create and save a figure of body mass across islands  
+4. Perform a one-way ANOVA  
+5. Conduct Tukey HSD post-hoc comparisons  
+6. Render the final manuscript  
+
+## Reproducibility
+
+This project uses the `renv` package to manage package dependencies.  
+
+To recreate the computational environment, run:
 
 ```{r}
-sessionInfo()
-'''
+renv::restore()

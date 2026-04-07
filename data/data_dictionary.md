@@ -5,7 +5,7 @@ The processed dataset (`penguins_island_body_mass.csv`) is a subset of the raw d
 See `scripts/02_clean_penguins.R` for processing details.
 
 | Variable ID | Variable Name | Variable Definition | Variable Type | Allowable Values / Units | Notes |
-|------------|------------|------------|------------|------------|------------|
+|----|----|----|----|----|----|
 | species | Penguin species | Species classification of penguin | Categorical | Adelie, Chinstrap, Gentoo | Not used in analysis |
 | island | Island name | Island where the penguin was observed | Categorical | Biscoe, Dream, Torgersen | Used in analysis |
 | bill_length_mm | Bill length | Length of the culmen (penguin bill) | Numeric | millimeters (mm) | Not used in analysis |

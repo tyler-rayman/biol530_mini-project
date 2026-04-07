@@ -11,42 +11,46 @@ bibliography: references.bib
 csl: apa.csl
 header-includes:
   - \usepackage{caption}
+  - \usepackage{float}
   - \captionsetup{justification=raggedright,singlelinecheck=false,labelfont=bf}
 ---
 
 # Abstract
-Body mass is an important biological trait that can vary across species populations due to ecological and environmental factors. In penguins specifically, body mass differences may reflect variation in habitat conditions, resource availability, or individual lifespan among locations. This study examined whether penguin body mass differs across three islands in the Palmer Archipelago using the Palmer Penguins dataset. Body mass measurements from penguins sampled on the islands of Biscoe, Dream, and Torgersen were analyzed using a one-way analysis of variance (ANOVA). Mean body mass differed significantly among islands, and therefore a Tukey's HSD test was applied to locate the differences in means.
+Body mass is an important biological trait that can vary across populations due to ecological and environmental factors. In penguins, variation in body mass may reflect differences in habitat conditions, resource availability, or energetic demands across locations. This study examined whether penguin body mass differs across three islands in the Palmer Archipelago using the Palmer Penguins dataset. Body mass measurements from penguins sampled on Biscoe, Dream, and Torgersen islands were analyzed using a one-way analysis of variance (ANOVA). Mean body mass differed significantly among islands, and a Tukey's HSD test was applied to identify pairwise differences. Penguins on Biscoe Island exhibited significantly greater body mass than those on Dream and Torgersen islands, while no significant difference was observed between Dream and Torgersen. These findings suggest spatial variation in penguin body mass across the Palmer Archipelago.
 
 # Introduction
 
-Body size is an important biological trait that ... 
-In penguins, body mass ...  
+Body size is a fundamental biological trait that influences physiology, survival, and reproductive success across animal taxa. In ecological systems, variation in body size is often associated with environmental gradients, including temperature, resource availability, and habitat structure. One well-known ecological pattern, Bergmann’s rule, predicts that individuals in colder environments tend to exhibit larger body sizes, potentially due to thermoregulatory advantages (Blackburn et al., 1999).
 
-This study explores whether penguin body mass differs across islands using the Palmer Penguins dataset (Horst et al., 2020).
+Penguins (genus Pygoscelis) provide a useful system for examining variation in body mass across spatial environments. These seabirds inhabit diverse ecological niches within the Antarctic region, where differences in ocean productivity, prey availability, and environmental conditions may influence individual growth and energetic balance. Previous studies have demonstrated that penguin morphology can vary with environmental conditions and ecological pressures, including differences in foraging strategies and reproductive investment (Gorman et al., 2014).
+
+The Palmer Archipelago, located along the western Antarctic Peninsula, contains multiple islands that support penguin populations under varying local conditions. The Palmer Penguins dataset provides standardized morphological measurements collected across these islands, offering an opportunity to examine spatial variation in traits such as body mass (Horst et al., 2022).
+
+In this study, we test whether penguin body mass differs across three islands in the Palmer Archipelago (Biscoe, Dream, and Torgersen). We hypothesize that mean body mass will vary among islands, reflecting differences in local environmental conditions and ecological factors.
 
 # Methods
 
 ## Data Source
 
-Data were obtained from the `palmerpenguins` R package (Horst et al., 2020).  
-The raw dataset was exported to CSV using `scripts/01_load_raw_penguins.R`.  
+Data were obtained from the palmerpenguins R package (Horst et al., 2022).
+The raw dataset was exported to CSV using scripts/01_load_raw_penguins.R.
 
-Data cleaning was performed using `scripts/02_clean_penguins.R`, which:
-- Selected the variables `island` and `body_mass_g`
-- Removed rows containing missing values
-- Generated a processed dataset for analysis
+Data cleaning was performed using scripts/02_clean_penguins.R, which:
+
+-Selected the variables island and body_mass_g
+-Removed rows containing missing values
+-Generated a processed dataset for analysis
 
 ## Statistical Analysis
 
-All analyses were performed in R.
+All analyses were performed in R. Differences in mean penguin body mass across islands were evaluated using a one-way analysis of variance (ANOVA), with island treated as a categorical predictor and body mass as the response variable. Where a significant overall effect was detected, Tukey’s Honestly Significant Difference (HSD) test was used for post-hoc pairwise comparisons between islands. Statistical significance was assessed at $\alpha = 0.05$.
 
 # Results
 ```{r load-data, echo=FALSE}
 penguins <- read.csv("../data/data_processed/penguins_body_mass_by_island.csv")
 ```
-Observations across penguins measured on the three islands are shown below in a summary table. 
-```{r summary-stats, echo=FALSE}
-
+Summary statistics for penguin body mass across islands are presented in Table 1.
+```{r summary-stats, echo=FALSE, results='asis'}
 means <- tapply(penguins$body_mass_g, penguins$island, mean)
 sds <- tapply(penguins$body_mass_g, penguins$island, sd)
 ns <- tapply(penguins$body_mass_g, penguins$island, length)
@@ -64,44 +68,60 @@ write.csv(summary_stats,
           row.names = FALSE)
 
 # display the table in the manuscript
-knitr::kable(summary_stats,
-             caption = "Summary statistics for penguin body mass across islands.",
-             row.names = FALSE)
-
+kableExtra::kbl(
+  summary_stats,
+  caption = "Summary statistics for penguin body mass across islands.",
+  booktabs = TRUE
+) |>
+  kableExtra::kable_styling(latex_options = "hold_position")
 ```
 To visualize the distribution of body mass across islands, a boxplot was generated (Figure 1). Penguins sampled from Biscoe Island appear to have higher body mass values overall compared with those from Dream and Torgersen islands.
-```{r body-mass-figure, echo=FALSE, fig.cap="Distribution of penguin body mass across the three islands.", fig.align="center"}
+```{r body-mass-figure, echo=FALSE, fig.cap="Distribution of penguin body mass across the three islands.", fig.align="center", fig.pos="H"}
 boxplot(body_mass_g ~ island,
         data = penguins,
         xlab = "Island",
         ylab = "Body Mass (g)",
         col = "lightblue")
 ```
-A one-way analysis of variance (ANOVA) revealed a significant effect of island on body mass (F(2, 339) = 110, p < 0.001). Post-hoc comparisons using Tukey’s Honestly Significant Difference (HSD) test indicated that penguins from Biscoe Island had significantly greater body mass than those from Dream and Torgersen islands (p < 0.001 for both comparisons), while body mass did not differ significantly between Dream and Torgersen islands (p = 0.998).
-```{r anova-test, echo=FALSE}
+A one-way analysis of variance (ANOVA) is presented in Table 2 and revealed a significant effect of island on body mass (F(2, 339) = 110, p < 0.001). Post-hoc comparisons using Tukey’s Honestly Significant Difference (HSD) test indicated that penguins from Biscoe Island had significantly greater body mass than those from Dream and Torgersen islands (p < 0.001 for both comparisons), while body mass did not differ significantly between Dream and Torgersen islands (p = 0.998).
+```{r anova-test, echo=FALSE, results='asis'}
 anova_model <- aov(body_mass_g ~ island, data = penguins)
 anova_result <- summary(anova_model)
 
 anova_table <- anova_result[[1]]
 rownames(anova_table)[1] <- "Island"
 
-knitr::kable(anova_table, digits = 2)
+kableExtra::kbl(
+  anova_table,
+  digits = 2,
+  caption = "ANOVA results for differences in penguin body mass across islands.",
+  booktabs = TRUE
+) |>
+  kableExtra::kable_styling(
+    latex_options = c("hold_position")
+  )
 ```
 
 ```{r tukey-test, echo=FALSE, include=FALSE}
 tukey_result <- TukeyHSD(anova_model)
 ```
 
-Mean penguin body mass varied across islands (Figure 1). A one-way analysis of variance (ANOVA) revealed a significant effect of island on body mass (F(2, 339) = 110, p < 0.001). Post-hoc comparisons using Tukey’s Honestly Significant Difference (HSD) test indicated that penguins from Biscoe Island had significantly greater body mass than those from Dream and Torgersen islands (p < 0.001 for both comparisons), while body mass did not differ significantly between Dream and Torgersen islands (p = 0.998).
+Post-hoc comparisons using Tukey’s Honestly Significant Difference (HSD) test indicated that penguins from Biscoe Island had significantly greater body mass than those from Dream and Torgersen islands (p < 0.001 for both comparisons), while body mass did not differ significantly between Dream and Torgersen islands (p = 0.998).
 
 # Discussion
 
-Differences in body mass across islands may reflect a multitude of reasons. Based on the ANOVA test results, penguins measured on the island of Biscoe have significantly larger mass than those on the other two islands.
+This study demonstrates that penguin body mass varies significantly across islands within the Palmer Archipelago. Penguins sampled on Biscoe Island exhibited substantially greater body mass compared to those on Dream and Torgersen islands, while the latter two islands did not differ significantly from one another. These results suggest that spatial variation in environmental conditions may influence penguin body mass at the population level.
 
-Because this dataset is observational, results should not be interpreted as causal.
+Differences in body mass across islands may reflect variation in ecological factors such as prey availability, ocean productivity, or energetic demands associated with local environmental conditions. Larger body mass in penguins from Biscoe Island may indicate access to greater or more consistent food resources, or differences in habitat conditions that support increased energy storage. Alternatively, variation in species composition across islands may also contribute to observed differences in body mass, as different penguin species exhibit distinct size ranges.
+
+It is important to note that this analysis is based on observational data and does not account for potential confounding factors such as species identity, sex, or age. As a result, causal interpretations cannot be made. Future analyses incorporating additional variables could provide a more detailed understanding of the mechanisms underlying variation in penguin body mass.
+
+Despite these limitations, this study highlights clear spatial differences in penguin body mass across islands in the Palmer Archipelago and demonstrates the utility of reproducible workflows for conducting and communicating ecological analyses.
+
+Because this dataset is observational, results should not be interpreted as causal. Future research should take species categorization into consideration when designing the study.
 
 # Data and Code Availability
-All data processing and analysis scripts are available in the scripts directory. 
+All data processing and analysis scripts are available in the scripts/ directory. The processed dataset is available in data/data_processed/, and all outputs are stored in the outputs/ directory.
 
 # References
 
